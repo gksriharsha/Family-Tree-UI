@@ -1,0 +1,20 @@
+.form{
+  margin: 20px;
+  padding: 20px;
+  width: 300px;
+  border: #928f8f solid 0.5px;
+}
+.form .form-control{
+  border: None;
+  border-bottom: solid darkgray 1px;
+  border-radius: 0;
+}
+.submit-div{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.btn{
+
+}
