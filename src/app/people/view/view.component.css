@@ -1,0 +1,18 @@
+.center {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 45vh;
+}
+
+.peopleList li {
+  list-style: none;
+}
+.peopleList .person :hover {
+  border-left: #928f8f 2px solid;
+  width: 250px;
+  max-height: 40px;
+  padding: 5px 10px;
+}
+
+/*# sourceMappingURL=view.component.css.map */

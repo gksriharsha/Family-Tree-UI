@@ -7,3 +7,7 @@ footer {
   position: absolute;
   width: 100%;
 }
+
+nav :hover{
+  text-transform: capitalize;
+}

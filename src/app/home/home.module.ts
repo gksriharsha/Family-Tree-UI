@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {HomeComponent} from './home.component';
 import {HomeRoutingModule} from './home-routing.module';
-import {HttpClientModule} from '@angular/common/http';
 
 
 

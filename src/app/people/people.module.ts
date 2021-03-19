@@ -4,9 +4,9 @@ import { ViewComponent } from '../people/view/view.component';
 import {RouterModule} from '@angular/router';
 import {PeopleRoutingModule} from './people-routing.module';
 import { DetailedViewComponent } from '../people/detailed-view/detailed-view.component';
-import {HttpClientModule} from '@angular/common/http';
 import {PeopleComponent} from './people.component';
 import {AddPersonComponent} from './add/add-person.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
 
@@ -20,6 +20,8 @@ import {AddPersonComponent} from './add/add-person.component';
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
     PeopleRoutingModule
   ]
 })

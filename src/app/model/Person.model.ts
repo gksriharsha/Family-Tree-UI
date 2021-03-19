@@ -1,5 +1,6 @@
 export class Person{
-  public Name:string;
+  public ID:number;
+  public Firstname:string;
   public DOB:string;
   public Gender:string;
 

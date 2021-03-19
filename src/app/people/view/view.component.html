@@ -1,5 +1,16 @@
-<p>view works!</p>
-
-<ul>
-  <li *ngFor="let person of People">{{person.Name }}</li>
-</ul>
+<div class="center">
+  <div *ngIf="People.length == 0 else Peeps">
+    <p> No people found</p>
+  </div>
+  <ng-template #Peeps>
+    <ul class="peopleList">
+      <li style="cursor: pointer" *ngFor="let person of People">
+        <div class="person">
+          <a (click)="viewPerson(person.ID)">
+        {{person.Firstname }}
+      </a>
+        </div>
+      </li>
+    </ul>
+  </ng-template>
+</div>

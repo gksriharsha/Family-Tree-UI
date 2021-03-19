@@ -4,6 +4,7 @@ import {PeopleComponent} from './people.component';
 import {DetailedViewComponent} from './detailed-view/detailed-view.component';
 import {ViewComponent} from './view/view.component';
 import {AddPersonComponent} from './add/add-person.component';
+import {PeopleResolver} from '../resolvers/PeopleResolver';
 
 
 const routes:Routes = [
@@ -14,6 +15,13 @@ const routes:Routes = [
       {
         path:'add',
         component:AddPersonComponent
+      },
+      {
+        path:'view/all',
+        component:ViewComponent,
+        resolve:{
+          data:PeopleResolver
+        }
       },
       {
         path:'view/:id',
