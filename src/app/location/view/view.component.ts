@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommunicationService} from '../../services/communication.service';
 import {Location} from '../../model/Location.model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-view',
@@ -9,14 +10,20 @@ import {Location} from '../../model/Location.model';
 })
 export class ViewComponent implements OnInit {
 
-  Locations:Location[];
-  count:number;
-  constructor(private CommService:CommunicationService) { }
+  Locations: Location[];
+  count: number;
+
+  constructor(private CommService: CommunicationService, private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.CommService.fetchLocationsCount().subscribe( data => {
-      this.count = data.Result;
+    this.CommService.fetchAllLocations().subscribe(data => {
+      this.Locations = data.Data;
+      console.log(this.Locations);
     });
   }
 
+  viewLocation(ID: any): void {
+    this.router.navigateByUrl('/location/view/' + ID);
+  }
 }

@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommunicationService} from '../../services/communication.service';
 import {Person} from '../../model/Person.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {newArray} from '@angular/compiler/src/util';
-
 
 
 @Component({
@@ -13,23 +12,23 @@ import {newArray} from '@angular/compiler/src/util';
 })
 export class ViewComponent implements OnInit {
 
-  People:Person[];
-  nullPeople:boolean;
+  People: Person[];
+  nullPeople: boolean;
 
-  constructor(private comm:CommunicationService,private router:Router,private route: ActivatedRoute) { }
+  constructor(private comm: CommunicationService, private router: Router, private route: ActivatedRoute) {
+  }
 
   ngOnInit(): void {
     this.People = [];
     this.route.data.subscribe(data => {
-      if(data.data.Data != null)
-      {
+      if (data.data.Data != null) {
         this.People = data.data.Data;
       }
-    })
-    console.log(this.People.length)
+    });
+    console.log(this.People.length);
   }
 
-  viewPerson(id:number) {
-    this.router.navigateByUrl('/people/view/'+id);
+  viewPerson(id: number) {
+    this.router.navigateByUrl('/people/view/' + id);
   }
 }

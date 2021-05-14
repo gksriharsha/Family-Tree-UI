@@ -1,0 +1,54 @@
+.main-info {
+  text-align: center;
+}
+
+.item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 50px;
+  max-width: 50%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+p {
+  margin: 0 10px;
+}
+
+.ico {
+  max-height: 20px;
+  max-width: 20px;
+}
+
+.profile-pic {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 200px;
+  max-height: 200px;
+  margin-bottom: 10px;
+}
+
+.side-info {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.row {
+  margin-bottom: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.row .key {
+  font-weight: bold;
+}
+
+.row .uline:hover {
+  border-bottom: 2px #afafaf solid;
+}

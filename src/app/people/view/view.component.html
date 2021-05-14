@@ -1,5 +1,5 @@
-<div class="center">
-  <div *ngIf="People.length == 0 else Peeps">
+<div>
+  <div class="center" *ngIf="People.length == 0 else Peeps">
     <p> No people found</p>
   </div>
   <ng-template #Peeps>
@@ -7,6 +7,7 @@
       <li style="cursor: pointer" *ngFor="let person of People">
         <div class="person">
           <a (click)="viewPerson(person.ID)">
+            <img src="../../../assets/person.png">
         {{person.Firstname }}
       </a>
         </div>

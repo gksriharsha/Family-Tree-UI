@@ -1,8 +1,18 @@
 <div class="form">
-  <form (ngSubmit)="onSubmit(Submissionform.value)" #Submissionform="ngForm">
+  <form (ngSubmit)="onSubmit(Submissionform)" #Submissionform="ngForm">
     <div class="form-group">
-      <label for="Name">Name</label>
-      <input type="text" required minlength="5" id="Name" class="form-control" name="name" ngModel>
+      <label for="Firstname">Firstname</label>
+      <input type="text" required minlength="5" id="Firstname" class="form-control" name="fname" ngModel>
+    </div>
+    <div class="form-group">
+      <label for="Lastname">Lastname</label>
+          <div class="spinner" *ngIf="lastNameSearch == 'Searching'">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+      <input type="text" required minlength="5" [ngClass]="{
+        'error':lastNameSearch == 'Not Found'}" id="Lastname" class="form-control" name="lname" (focusout)="searchLastnames()" [(ngModel)]= lastName >
     </div>
     <div class="form-group">
       <div style="display: flex;justify-content: space-between">
@@ -10,15 +20,16 @@
           <label for="DOB1">Date of Birth</label>
         </div>
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="switch" name="switch"ngModel>
+          <input type="checkbox" class="custom-control-input" id="switch" name="switch" ngModel>
           <label class="custom-control-label" for="switch">Exact Date</label>
         </div>
       </div>
       <div *ngIf="Submissionform.value.switch;else approxDate">
-        <input type="date" required id="DOB1" class="form-control" name="DOB" ngModel>
+        <input type="date" required id="DOB1" class="form-control" name="DOB" min="1900-01-01" [max]=date ngModel>
       </div>
       <ng-template #approxDate>
-        <input type="number" required  id="DOB2" class="form-control" name="DOB" placeholder="Year of birth" [formControl]="yearController" ngModel>
+        <input type="number" required id="DOB2" class="form-control" name="DOB" placeholder="Year of birth"
+               [formControl]="yearController" ngModel>
       </ng-template>
     </div>
     <div class="form-group" style="display: flex;">
@@ -28,13 +39,19 @@
         <label for="male">Male</label>
       </div>
       <div style="margin: 0 10px">
-        <input type="radio" id="female" value="Female" name="gender" ngModel requied style="margin: 0 5px">
+        <input type="radio" id="female" value="Female" name="gender" ngModel required style="margin: 0 5px">
         <label for="female">Female</label>
       </div>
     </div>
+    <div class="form-group">
+      <label id="occupation">Occupation</label>
+      <input for="occupation" class="form-control" name="occupation" type="text" ngModel>
+    </div>
     <div class="submit-div">
-      <button type="submit" class="btn btn-success" [disabled]="!Submissionform.valid">Submit</button>
+      <button type="submit" class="btn btn-success" [disabled]="!(Submissionform.valid &&
+      (Submissionform.value.switch || yearController.valid))">
+        Submit
+      </button>
     </div>
   </form>
-
 </div>

@@ -1,0 +1,12 @@
+p {
+  text-align: center;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-transition-duration: 2s;
+          transition-duration: 2s;
+}
+
+.success {
+  background-color: #99e057;
+}

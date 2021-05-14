@@ -1,0 +1,41 @@
+@import '../../../assets/colorspace';
+.main-info{
+    text-align: center;
+}
+.item{
+    display: flex;
+    height: 50px;
+    max-width: 50%;
+    justify-content: space-between;
+}
+p{
+    margin: 0 10px;
+}
+.ico{
+    max-height: 20px;
+    max-width: 20px;
+}
+.profile-pic{
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 200px;
+    max-height: 200px;
+    margin-bottom: 10px;
+}
+.side-info{
+    margin-left: auto;
+    margin-right: auto;
+}
+.row{
+    margin-bottom:10px ;
+    display: flex;
+    justify-content: space-evenly;
+    .key{
+        font-weight: bold;
+    }
+    .uline:hover{
+        border-bottom: 2px #afafaf solid;
+    }
+}
+
+

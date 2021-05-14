@@ -4,3 +4,16 @@
   margin-right: auto;
   margin-top: 45vh;
 }
+.locationList{
+  li{
+    list-style: none;
+  }
+  .location{
+    :hover{
+      border-left: #928f8f 2px solid;
+      width: 250px;
+      max-height: 40px;
+      padding: 5px 10px;
+    }
+  }
+}

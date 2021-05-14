@@ -1,26 +1,31 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Person} from '../model/Person.model';
 import {Observable} from 'rxjs';
 import {Location} from '../model/Location.model';
 
 export interface PeopleResponseData {
-  Message:string,
-  Data:Person[]
+  Message: string;
+  Data: Person[];
 }
 
-export interface LocationResponseData{
-  Message:string,
-  Data:Location[]
+export interface PersonResponseData{
+  Message:string;
+  Data:Person;
 }
 
-export interface AuthQueryData{
-  Message:string,
-  Result:any
+export interface LocationResponseData {
+  Message: string;
+  Data: Location[];
 }
 
-interface DataSubmission {
-  message:string
+export interface QueryData {
+  Message: string;
+  Result: any;
+}
+
+export interface DataSubmission {
+  Message: string;
 }
 
 @Injectable({
@@ -28,36 +33,68 @@ interface DataSubmission {
 })
 export class CommunicationService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   private baseUrl = 'http://localhost:5000';
 
-  fetchAllPeople(){
-    let p = new Person()
-    p.Firstname = 'all'
+  fetchAllPeople(): Observable<PeopleResponseData> {
+    let p: Person;
+    p = new Person();
+    p.Firstname = 'all';
     return this.http
-      .post<PeopleResponseData>(this.baseUrl+'/get/person',p);
+      .post<PeopleResponseData>(this.baseUrl + '/get/person', p);
 
   }
 
-  fetchPeopleCount(){
+  fetchPerson(p:Person): Observable<PersonResponseData>{
     return this.http
-      .get<AuthQueryData>(this.baseUrl+'/query/count_people');
+      .post<PersonResponseData>(this.baseUrl + '/get/person', p);
   }
 
-  addPerson(p: Person) {
-    p['type']='quick_add'
+  fetchAllLocations(): Observable<LocationResponseData>{
+    let l: Location;
+    l = new Location();
+    l.Place = 'all';
+    return this.http.post<LocationResponseData>(this.baseUrl + '/get/location',l);
+  }
+  fetchPeopleCount(): Observable<QueryData> {
     return this.http
-      .post<DataSubmission>(this.baseUrl+'/add/person',p);
+      .get<QueryData>(this.baseUrl + '/query/count_people');
+  }
+
+  addPerson(p: Person): Observable<DataSubmission> {
+    p['type'] = 'quick_add';
+    return this.http
+      .post<DataSubmission>(this.baseUrl + '/add/person', p);
+  }
+
+  addLocation(l: Location): Observable<DataSubmission> {
+    return this.http.post<DataSubmission>(this.baseUrl + '/add/location', l);
   }
 
   fetchLocationsCount() {
     return this.http
-      .get<AuthQueryData>(this.baseUrl+'/query/count_locations');
+      .get<QueryData>(this.baseUrl + '/query/count_locations');
   }
 
-  fetchLocations(l:Location){
+  fetchLocations(l: Location) {
     return this.http
-      .post<LocationResponseData>(this.baseUrl+'/get/location',l);
+      .post<LocationResponseData>(this.baseUrl + '/get/location', l);
+  }
+
+  fetchAllLastNames() {
+    return this.http
+      .get<QueryData>(this.baseUrl + '/query/fetch_lastNames');
+  }
+
+  deletePerson(node:number){
+    return this.http
+      .delete<DataSubmission>(this.baseUrl + '/delete/nodes/'+node);
+  }
+
+  modifyPartial(person:Person){
+    return this.http
+      .post<DataSubmission>(this.baseUrl+'/modify/person',person)
   }
 }

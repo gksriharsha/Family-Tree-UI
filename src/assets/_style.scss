@@ -1,0 +1,10 @@
+@import './colorspace';
+
+@mixin style_input {
+    box-shadow: none;
+    border-bottom: $blue solid 2px;
+}
+
+@mixin error_input{
+    border-bottom: $orange solid 2px;
+}

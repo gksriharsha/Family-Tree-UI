@@ -3,9 +3,14 @@
 </div>
 
 <div class="center">
-  <li style="cursor: pointer" *ngFor="let location of Locations">
-    <div class="person">
+  <ul class="locationList">
 
+  <li style="cursor: pointer" *ngFor="let location of Locations">
+    <div class="location">
+      <a (click)="viewLocation(location.ID)">
+      {{location.Place}}
+      </a>
     </div>
   </li>
+  </ul>
 </div>

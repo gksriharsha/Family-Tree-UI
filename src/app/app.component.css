@@ -1,13 +1,18 @@
-footer {
+.footer {
+  margin-top: 10px;
   text-align: center;
   padding: 3px;
   background-color: #f8f9fa;
   color: black;
-  bottom: 0;
-  position: absolute;
   width: 100%;
+  position: fixed;
+  bottom: 0;
 }
 
 nav :hover{
   text-transform: capitalize;
+}
+
+.container{
+  max-width: 1200px;
 }

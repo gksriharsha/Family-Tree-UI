@@ -1,1 +1,56 @@
-<p>detailed-view works!</p>
+<div>
+    <div style="display: flex;">
+        <img src="../../../assets/person.png"
+            class="profile-pic">
+    </div>
+    <div class="main-info">
+        <h4 *ngIf="person.Firstname != null else del">{{person.Firstname}} . <a>{{person.Lastname}}</a></h4>
+        <span *ngIf="person.Gender != null" style="display: inline-flex;"><p>{{person.Gender}}</p><img class="ico" *ngIf="person.Gender == 'Male'"  src="../../../assets/Male.png"></span><br>
+        <span *ngIf="person.Birth != null" style="display: inline-flex;"><p>{{person.Birth.Date|date}}</p><span style="color: rgb(2, 173, 2);">●</span><p>{{timeElapsed}} years old</p></span>
+    </div>
+    <hr>
+    <div class="side-info">
+        <div class="row">
+            <div class="key" [ngClass]="{uline:!person.Birth.hasOwnProperty('Place')}" [ngStyle]="!person.Birth.hasOwnProperty('Place')?{'cursor': 'pointer'}:{}" data-toggle="modal" data-target="#exampleModalCenter" data-keyboard="false" data-backdrop="static" (click)="clickOnAddData('Place of Birth')">Place of Birth</div>
+            <div class="value" *ngIf="person.Birth.hasOwnProperty('Location')">{{person.Birth.Location}}</div>
+        </div>
+        <div class="row">
+            <div class="key" [ngClass]="{uline:person.Occupation == '' || person.Occupation == null}" [ngStyle]="person.Occupation == '' || person.Occupation == null?{'cursor': 'pointer'}:{}" data-toggle="modal" data-target="#exampleModalCenter" (click)="clickOnAddData('Occupation')" >Occupation</div>
+            <div class="value" *ngIf="person.Occupation != ''">{{person.Occupation}}</div>
+        </div>
+    </div>
+</div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Add data - {{person.Firstname}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clickOnAddData('')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <label>{{property}}</label>
+            <select #inp *ngIf="locations != null else text" style="float: right;">
+                <option *ngFor="let location of locations; let i = index" [value]="locations[i]['ID']" (click)="addedValue = [locations[i]['ID'],locations[i]['Place']];">
+                    {{location.Place}}
+                </option>
+            </select>
+            <ng-template #text>
+              <input type="text" [addedValue]="inp.value" #inp style="float: right;">
+            </ng-template>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addData()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<ng-template #del>
+    <button class="btn btn-danger" (click)="deletePerson()">
+        Delete Entry
+    </button>
+</ng-template>

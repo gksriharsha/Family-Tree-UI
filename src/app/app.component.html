@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">
-    <img src="./assets/leaf.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+    <img src="../assets/leaf.png" width="30" height="30" class="d-inline-block align-top" alt="">
     Vruksham
   </a>
   <div class="collapse navbar-collapse" id="navbarNav">
@@ -14,15 +14,17 @@
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['/location']" ui-sref-active="active" ui-sref="app">Locations</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" ui-sref-active="active" ui-sref="app">Relations</a>
-      </li>
     </ul>
   </div>
 </nav>
+<div class="container">
+<app-alert></app-alert>
+</div>
+<div class="container">
 <router-outlet></router-outlet>
+</div>
 
 
-<footer >
+<div class="footer" >
   <p>Author: Krishna Sriharsha</p>
-</footer>
+</div>
