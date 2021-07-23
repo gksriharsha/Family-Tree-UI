@@ -15,7 +15,9 @@ export class PeopleResolver implements Resolve<any>
   constructor(private CommService:CommunicationService) {}
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
     console.log('Resolving');
-    return this.CommService.fetchAllPeople();
+    let p = new Person();
+    p.Firstname = 'all';
+    return this.CommService.fetchAllPeople(p);
   }
 }
 

@@ -1,0 +1,37 @@
+@import '../assets/colorspace';
+
+.footer {
+    margin-top: 10px;
+    text-align: center;
+    padding: 3px;
+    background-color: #f8f9fa;
+    color: black;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+  }
+  
+  nav :hover{
+    text-transform: capitalize;
+  }
+  
+  .container{
+    max-width: 1200px;
+    background-color: #f2f2f2;
+  }
+
+  .form-control{
+    border: None ;
+    border-bottom: solid darkgray 1px;
+    border-radius: 0 ;
+    box-shadow: none;
+    :focus{
+      border-bottom: $blue solid 2px !important;
+    } 
+  }
+  input:focus{
+    border-bottom: $blue solid 2px !important;
+  }
+  input.error{
+    border-bottom: $orange solid 2px;
+  }

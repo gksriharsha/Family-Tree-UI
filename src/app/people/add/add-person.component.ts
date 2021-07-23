@@ -55,7 +55,6 @@ export class AddPersonComponent implements OnInit {
     p.Birth.Date = form.value.DOB;
     p.Gender = form.value.gender;
     p.Lastname = form.value.lname;
-    p.Occupation = form.value.occupation;
     form.reset();
     this.CommService.addPerson(p).subscribe(data => {
       let a;

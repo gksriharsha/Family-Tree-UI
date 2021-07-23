@@ -9,10 +9,31 @@
   bottom: 0;
 }
 
-nav :hover{
+nav :hover {
   text-transform: capitalize;
 }
 
-.container{
+.container {
   max-width: 1200px;
+  background-color: #f2f2f2;
+}
+
+.form-control {
+  border: None;
+  border-bottom: solid darkgray 1px;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.form-control :focus {
+  border-bottom: #1261bb solid 2px !important;
+}
+
+input:focus {
+  border-bottom: #1261bb solid 2px !important;
+}
+
+input.error {
+  border-bottom: #f88e37 solid 2px;
 }

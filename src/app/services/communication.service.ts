@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Person} from '../model/Person.model';
 import {Observable} from 'rxjs';
 import {Location} from '../model/Location.model';
+import { Relation } from '../model/Relation.model';
 
 export interface PeopleResponseData {
   Message: string;
@@ -12,6 +13,7 @@ export interface PeopleResponseData {
 export interface PersonResponseData{
   Message:string;
   Data:Person;
+  Relations:any;
 }
 
 export interface LocationResponseData {
@@ -38,10 +40,7 @@ export class CommunicationService {
 
   private baseUrl = 'http://localhost:5000';
 
-  fetchAllPeople(): Observable<PeopleResponseData> {
-    let p: Person;
-    p = new Person();
-    p.Firstname = 'all';
+  fetchAllPeople(p:Person): Observable<PeopleResponseData> {
     return this.http
       .post<PeopleResponseData>(this.baseUrl + '/get/person', p);
 
@@ -69,6 +68,11 @@ export class CommunicationService {
       .post<DataSubmission>(this.baseUrl + '/add/person', p);
   }
 
+  addRelative(r: Relation) {
+    return this.http
+      .post<DataSubmission>(this.baseUrl + '/relate/people', r);
+  }
+
   addLocation(l: Location): Observable<DataSubmission> {
     return this.http.post<DataSubmission>(this.baseUrl + '/add/location', l);
   }
@@ -86,6 +90,11 @@ export class CommunicationService {
   fetchAllLastNames() {
     return this.http
       .get<QueryData>(this.baseUrl + '/query/fetch_lastNames');
+  }
+
+  fetchRelation(relation){
+    return this.http
+      .post(this.baseUrl+'/search/relation',relation);
   }
 
   deletePerson(node:number){

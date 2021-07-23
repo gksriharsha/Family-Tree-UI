@@ -15,7 +15,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     ViewComponent,
     PeopleComponent,
     AddPersonComponent,
-    DetailedViewComponent,
+    DetailedViewComponent
   ],
   imports: [
     CommonModule,

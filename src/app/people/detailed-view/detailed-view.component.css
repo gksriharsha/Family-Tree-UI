@@ -13,13 +13,18 @@
           justify-content: space-between;
 }
 
+.form {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 p {
   margin: 0 10px;
 }
 
 .ico {
-  max-height: 20px;
-  max-width: 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .profile-pic {
@@ -51,4 +56,12 @@ p {
 
 .row .uline:hover {
   border-bottom: 2px #afafaf solid;
+}
+
+.alive-dot {
+  color: #02ad02;
+}
+
+.alive-dot:hover {
+  color: aqua  !important;
 }

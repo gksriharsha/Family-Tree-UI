@@ -12,10 +12,12 @@ export class Person{
   public Occupation:string;
   public PlaceOfOccupation:string;
   public Native:Location;
+  public Alive:string;
 
   public Birth:TimePlaceEvent;
   public Death?:TimePlaceEvent;
   public Marriage:TimePlaceEvent[]; 
+  public Related?:string;
   
   
   constructor(){

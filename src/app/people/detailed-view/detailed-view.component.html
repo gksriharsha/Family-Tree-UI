@@ -1,56 +1,383 @@
 <div>
-    <div style="display: flex;">
-        <img src="../../../assets/person.png"
-            class="profile-pic">
+  <div style="display: flex;">
+    <img src="../../../assets/person.png" class="profile-pic">
+  </div>
+  <div class="main-info">
+    <!-- <h4 *ngIf="person.Firstname != null else del">{{person.Firstname}} . <a>{{person.Lastname}}</a></h4> -->
+    <h4 style="display: inline-flex;">{{person.Firstname}} . <a>{{person.Lastname}}</a>
+      <div style="width: 20px;height: 20px;margin-left: 10px;" data-toggle="modal" data-target="#RelationSearch"
+        data-keyboard="false" data-backdrop="static"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg></div>
+    </h4><br>
+    <div style="display: inline-flex;" *ngIf="person.Gender != null">
+      <p>{{person.Gender}}</p><img class="ico" *ngIf="person.Gender == 'Male'" src="../../../assets/Male.png"><img
+        class="ico" *ngIf="person.Gender == 'Female'" src="../../../assets/Female.png">
+    </div><br>
+    <div style="display: inline-flex;" *ngIf="person.Birth.Date != null">
+      <p>{{person.Birth.Date|date}}</p>
+      <div class="alive-dot" style=" pointer-events: none;font-size: 67px;margin-top: -43px;margin-bottom: -45px;">
+        &bull;</div>
+      <p>{{timeElapsed}} years old</p>
     </div>
-    <div class="main-info">
-        <h4 *ngIf="person.Firstname != null else del">{{person.Firstname}} . <a>{{person.Lastname}}</a></h4>
-        <span *ngIf="person.Gender != null" style="display: inline-flex;"><p>{{person.Gender}}</p><img class="ico" *ngIf="person.Gender == 'Male'"  src="../../../assets/Male.png"></span><br>
-        <span *ngIf="person.Birth != null" style="display: inline-flex;"><p>{{person.Birth.Date|date}}</p><span style="color: rgb(2, 173, 2);">●</span><p>{{timeElapsed}} years old</p></span>
+  </div>
+  <hr>
+  <div style="display: flex;justify-content: space-evenly;">
+    <div style="margin: auto 0;">
+      <div style="display: inline-flex;"><a href="/" data-toggle="modal" data-target="#addRelation"
+          data-keyboard="false" data-backdrop="static">Add Relation</a></div>
     </div>
-    <hr>
-    <div class="side-info">
-        <div class="row">
-            <div class="key" [ngClass]="{uline:!person.Birth.hasOwnProperty('Place')}" [ngStyle]="!person.Birth.hasOwnProperty('Place')?{'cursor': 'pointer'}:{}" data-toggle="modal" data-target="#exampleModalCenter" data-keyboard="false" data-backdrop="static" (click)="clickOnAddData('Place of Birth')">Place of Birth</div>
-            <div class="value" *ngIf="person.Birth.hasOwnProperty('Location')">{{person.Birth.Location}}</div>
+    <div style="margin: auto 0;" *ngIf="relations.Father == null and relations.Mother == null else Parents">
+      <div style="display: inline-flex;"><strong style="margin-right: 10px;padding: 5px 0;">Parents:</strong>
+        <div><button class="btn btn-success" data-toggle="modal" data-target="#addPerson" data-keyboard="false"
+            data-backdrop="static" (click)="clickOnAddPerson('Parents')">+</button></div>
+      </div>
+    </div>
+    <ng-template #Parents>
+      <div style="margin: auto 0;">
+        <div style="display: inline-flex;"><strong style="margin-right: 10px;">Father:</strong>
+          <div *ngIf="relations.Father != null else addF"><a
+              [routerLink]="['/people/view/'+relations.Father.ID]">{{relations.Father.Firstname}}</a></div>
         </div>
-        <div class="row">
-            <div class="key" [ngClass]="{uline:person.Occupation == '' || person.Occupation == null}" [ngStyle]="person.Occupation == '' || person.Occupation == null?{'cursor': 'pointer'}:{}" data-toggle="modal" data-target="#exampleModalCenter" (click)="clickOnAddData('Occupation')" >Occupation</div>
-            <div class="value" *ngIf="person.Occupation != ''">{{person.Occupation}}</div>
+      </div>
+
+      <div style="margin: auto 0;">
+        <div style="display: inline-flex;"><strong style="margin-right: 10px;">Mother:</strong>
+          <div *ngIf="relations.Mother != null else addM"><a
+              [routerLink]="['/people/view/'+relations.Mother.ID]">{{relations.Mother.Firstname}}</a></div>
         </div>
+      </div>
+    </ng-template>
+
+
+    <div style="margin: auto 0;">
+      <div style="display: inline-flex;"><strong style="margin-right: 10px;">Spouse:</strong>
+        <div *ngIf="relations.Spouse != null else addSp"><a
+            [routerLink]="['/people/view/'+relations.Spouse[0].ID]">{{relations.Spouse[0].Firstname}}</a><a
+            style="margin-left: 10px;background-color: greenyellow;cursor: pointer;border: 1px solid black;border-radius: 50%;width: 10px;"
+            data-toggle="modal" data-target="#addPerson" data-keyboard="false" data-backdrop="static"
+            (click)="clickOnAddPerson('Spouse')">+</a></div>
+      </div>
     </div>
+
+    <div style="margin: auto 0;" *ngIf="relations.Father != null && relations.Mother != null">
+      <div style="display: inline-flex;"><strong style="margin-right: 10px;">Sibling:</strong>
+        <div *ngIf="relations.Brother != null and relations.Sister !=null else addS"><a
+            *ngFor="let Brother of relations.Brother;let i=index"
+            [routerLink]="['/people/view/'+relations.Brother[i].ID]">{{relations.Brother[i].Firstname}}</a><a
+            *ngFor="let Sister of relations.Sister;let i=index"
+            [routerLink]="['/people/view/'+relations.Sister[i].ID]">{{relations.Sister[i].Firstname}}</a></div>
+      </div>
+    </div>
+
+    <div style="margin: auto 0;">
+      <div style="display: inline-flex;"><strong style="margin-right: 10px;">Child:</strong>
+        <div *ngIf="relations.Children != null else addC"><a *ngFor="let Child of relations.Children;let i=index"
+            [routerLink]="['/people/view/'+relations.Children[i].ID]"
+            style="margin-right: 10px;">{{relations.Children[i].Firstname}}</a><a
+            style="margin-left: 10px;background-color: greenyellow;cursor: pointer;border: 1px solid black;border-radius: 50%;width: 10px;"
+            data-toggle="modal" data-target="#addPerson" data-keyboard="false" data-backdrop="static"
+            (click)="clickOnAddPerson('Child')">+</a></div>
+      </div>
+    </div>
+
+    <ng-template #addF>
+      <button class="btn btn-success" data-toggle="modal" data-target="#addPerson" data-keyboard="false"
+        data-backdrop="static" (click)="clickOnAddPerson('Father')">+</button>
+    </ng-template>
+    <ng-template #addM>
+      <button class="btn btn-success" data-toggle="modal" data-target="#addPerson" data-keyboard="false"
+        data-backdrop="static" (click)="clickOnAddPerson('Mother')">+</button>
+    </ng-template>
+    <ng-template #addSp>
+      <button class="btn btn-success" data-toggle="modal" data-target="#addPerson" data-keyboard="false"
+        data-backdrop="static" (click)="clickOnAddPerson('Spouse')">+</button>
+    </ng-template>
+    <ng-template #addS>
+      <button class="btn btn-success" data-toggle="modal" data-target="#addPerson" data-keyboard="false"
+        data-backdrop="static" (click)="clickOnAddPerson('Sibling')">+</button>
+    </ng-template>
+    <ng-template #addC>
+      <button class="btn btn-success" data-toggle="modal" data-target="#addPerson" data-keyboard="false"
+        data-backdrop="static" (click)="clickOnAddPerson('Child')">+</button>
+    </ng-template>
+  </div>
+  <hr>
+  <div class="side-info">
+    <div class="row">
+      <button class="btn btn-success">Add details</button>
+    </div>
+    <div class="row">
+      <div class="key" [ngClass]="{uline:!person.Birth.hasOwnProperty('Location')}"
+        [ngStyle]="!person.Birth.hasOwnProperty('Location')?{'cursor': 'pointer'}:{}" data-toggle="modal"
+        data-target="#exampleModalCenter" data-keyboard="false" data-backdrop="static"
+        (click)="clickOnAddData('Place of Birth')">Place of Birth</div>
+      <div class="value" *ngIf="person.Birth.hasOwnProperty('Location')">{{person.Birth.Location}}</div>
+    </div>
+    <div class="row">
+      <div class="key" [ngClass]="{uline:person.Occupation == '' || person.Occupation == null}"
+        [ngStyle]="person.Occupation == '' || person.Occupation == null?{'cursor': 'pointer'}:{}" data-toggle="modal"
+        data-target="#exampleModalCenter" (click)="clickOnAddData('Occupation')">Occupation</div>
+      <div class="value" *ngIf="person.Occupation != null">{{person.Occupation}}</div>
+    </div>
+  </div>
 </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add data - {{person.Firstname}}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clickOnAddData('')">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<!-- #region Modals Section -->
+
+<!-- Location Modal-->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add data - {{person.Firstname}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clickOnAddData('')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label>{{property}}</label>
+        <select #inp *ngIf="locations != null else text" style="float: right;">
+          <option *ngFor="let location of locations; let i = index" [value]="locations[i]['ID']"
+            (click)="addedValue = [locations[i]['ID'],locations[i]['Place']];">
+            {{location.Place}}
+          </option>
+        </select>
+        <ng-template #text>
+          <input type="text" [addedValue]="inp.value" #inp style="float: right;">
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addData()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Search Modal-->
+<div class="modal fade" id="addRelation" tabindex="-1" role="dialog" aria-labelledby="addRelationTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Search Person</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearData()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label style="display: inline-flex;"> Search for a person <div
+          style="width: 20px;height: 20px;margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg></div></label><br>
+      <input type="text" class="form-control" (keyup.enter)="search(inp.value)" #inp>
+      <hr>
+      <div style="max-height: 100px;overflow-y: auto;">
+        <div *ngIf="path != null" style="text-align: center;">
+          {{selectedPerson}} - {{path.split("_")[0]}}
         </div>
-        <div class="modal-body">
-            <label>{{property}}</label>
-            <select #inp *ngIf="locations != null else text" style="float: right;">
-                <option *ngFor="let location of locations; let i = index" [value]="locations[i]['ID']" (click)="addedValue = [locations[i]['ID'],locations[i]['Place']];">
-                    {{location.Place}}
-                </option>
-            </select>
-            <ng-template #text>
-              <input type="text" [addedValue]="inp.value" #inp style="float: right;">
-            </ng-template>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addData()">Submit</button>
+        <ul style="list-style: none;" *ngIf="path == null or path == ''">
+          <li style="margin-bottom: 10px;text-align: center;" *ngFor="let person of results"><a style="cursor: pointer;"
+            (click)="addRelation()" *ngIf="id != person.ID">{{person.Firstname}}</a></li>
+        </ul>
+      </div>
+      <hr>
+      <div *ngIf="results != null" style="display: inline-flex;">
+        <div >
+           is </div>
+          <div style="width: 100px; display: block;"><select name="Relations" id="RelationId" class="form-control"><option>Hello</option><option>Hi</option></select></div> 
+          <div>of {{person.Firstname}}</div> 
+        
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AddPerson Modal-->
+<div class="modal fade" id="addPerson" tabindex="-1" role="dialog" aria-labelledby="addPersonTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPersonLongTitle">Add {{relationToBeAdded}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clickOnAddData('')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 10px;">
+        <div class="form">
+          <form (ngSubmit)="onSubmit(Submissionform)" #Submissionform="ngForm">
+            <div class="form-group"
+              *ngIf="relations.hasOwnProperty('Spouse') && relations.Spouse.length>1 && (relationToBeAdded == 'Child')">
+              <label>Choose the Child's Parent</label>
+              <select class="form-control" [ngModel]="spouseSelect">
+                <option *ngFor="let Spouse of relations.Spouse">{{Spouse.Firstname}}</option>
+              </select>
+            </div>
+            <div class="form-group" *ngIf="relationToBeAdded == 'Child' ">
+              <label style="float:left;">Adopted Child</label>
+              <div class="custom-control custom-switch" style="float:right;">
+                <input type="checkbox" class="custom-control-input" id="adoption" name="adoption"
+                  [ngModel]="relations.Spouse == null">
+                <label class="custom-control-label" for="adoption">Adopted</label>
+              </div>
+              <br><br>
+            </div>
+            <h5 *ngIf="relationToBeAdded == 'Parents'" style="text-align: center;">
+              Father
+            </h5>
+            <div class="form-group">
+              <label for="Firstname">Firstname</label>
+              <input type="text" required minlength="3" id="Firstname" class="form-control" name="fname" ngModel>
+            </div>
+            <div class="form-group">
+              <label for="Lastname">Lastname</label>
+              <div class="spinner" *ngIf="lastNameSearch == 'Searching'">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+              <input type="text" required minlength="5" [ngClass]="{
+                'error':lastNameSearch == 'Not Found'}" id="Lastname" class="form-control" name="lname"
+                (focusout)="searchLastnames()" [(ngModel)]=Lastname>
+            </div>
+            <div class="form-group">
+              <div style="display: flex;justify-content: space-between">
+                <div>
+                  <label for="DOB1">Date of Birth</label>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="switch" name="switch" ngModel>
+                  <label class="custom-control-label" for="switch">Exact Date</label>
+                </div>
+              </div>
+              <div *ngIf="Submissionform.value.switch;else approxDate">
+                <input type="date" required id="DOB1" class="form-control" name="DOB" min="1900-01-01" [max]=date
+                  ngModel>
+              </div>
+              <ng-template #approxDate>
+                <input type="number" required id="DOB2" class="form-control" name="DOB" placeholder="Year of birth"
+                  [formControl]="yearController" ngModel>
+              </ng-template>
+            </div>
+            <div class="form-group" style="display: flex;" *ngIf="relationToBeAdded != 'Parents' ">
+              <label> Gender :</label>
+              <div style="margin: 0 10px">
+                <input type="radio" id="male" value="Male" name="gender" [(ngModel)]="gender" required
+                  style="margin: 0 5px 0 0">
+                <label for="male">Male</label>
+              </div>
+              <div style="margin: 0 10px">
+                <input type="radio" id="female" value="Female" name="gender" [(ngModel)]="gender" required
+                  style="margin: 0 5px">
+                <label for="female">Female</label>
+              </div>
+            </div>
+            <div class="form-group" style="display: inline-flex;">
+              <label for="Alive"
+                style="padding-bottom:0px;margin-right:10px;margin-bottom:0px;margin-top:5px">Alive</label>
+              <input type="checkbox" id="Alive" name="alive" class="form-control">
+            </div>
+            <div class="modal-footer submit-div" *ngIf="relationToBeAdded != 'Parents'">
+              <button type="submit" class="btn btn-success" style="margin: auto;" [disabled]="!(Submissionform.valid &&
+              (Submissionform.value.switch || yearController.valid))">
+                Submit
+              </button>
+            </div>
+            <div *ngIf="relationToBeAdded == 'Parents'">
+              <h5 style="text-align: center;">
+                Mother
+              </h5>
+              <div class="form-group">
+                <label for="Firstname">Firstname</label>
+                <input type="text" required minlength="3" id="Firstname" class="form-control" name="fname2" ngModel>
+              </div>
+              <div class="form-group">
+                <label for="Lastname">Lastname</label>
+                <div class="spinner" *ngIf="lastNameSearch == 'Searching'">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+                </div>
+                <input type="text" required minlength="5" [ngClass]="{
+                'error':lastNameSearch == 'Not Found'}" id="Lastname" class="form-control" name="lname2"
+                  (focusout)="searchLastnames()" [(ngModel)]=Lastname2>
+              </div>
+              <div class="form-group">
+                <div style="display: flex;justify-content: space-between">
+                  <div>
+                    <label for="DOB1">Date of Birth</label>
+                  </div>
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="switch2" name="switch2" ngModel>
+                    <label class="custom-control-label" for="switch2">Exact Date</label>
+                  </div>
+                </div>
+                <div *ngIf="Submissionform.value.switch2;else approxDate">
+                  <input type="date" required id="DOB1" class="form-control" name="DOB2" min="1900-01-01" [max]=date
+                    ngModel>
+                </div>
+                <ng-template #approxDate>
+                  <input type="number" required id="DOB2" class="form-control" name="DOB2" placeholder="Year of birth"
+                    [formControl]="yearController" ngModel>
+                </ng-template>
+              </div>
+              <div class="form-group" style="display: inline-flex;">
+                <label for="Alive"
+                  style="padding-bottom:0px;margin-right:10px;margin-bottom:0px;margin-top:5px">Alive</label>
+                <input type="checkbox" id="Alive" name="alive2" class="form-control" ngModel>
+              </div>
+              <div class="modal-footer submit-div">
+                <button type="submit" class="btn btn-success" style="margin: auto;" [disabled]="!(Submissionform.valid &&
+              (Submissionform.value.switch || yearController.valid))">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-<ng-template #del>
-    <button class="btn btn-danger" (click)="deletePerson()">
-        Delete Entry
-    </button>
-</ng-template>
+<!-- Relation Search-->
+<div class="modal fade" id="RelationSearch" tabindex="-1" role="dialog" aria-labelledby="RelationSearchTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="RelationSearchTitleLong">Relation to this person</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearData()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label style="display: inline-flex;"> Search for a person <div
+            style="width: 20px;height: 20px;margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg></div></label><br>
+        <input type="text" class="form-control" (keyup.enter)="search($event)" #inp>
+      </div>
+      <hr>
+      <div style="height: 100px;overflow-y: auto;">
+        <div *ngIf="path != null" style="text-align: center;">
+          {{selectedPerson}} - {{path.split("_")[0]}}
+        </div>
+        <ul style="list-style: none;" *ngIf="path == null or path == ''">
+          <li style="margin-bottom: 10px;text-align: center;" *ngFor="let person of results"><a style="cursor: pointer;"
+              (click)="searchResult(person.Firstname,person.ID)" *ngIf="id != person.ID">{{person.Firstname}}</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #endregion -->
