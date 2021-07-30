@@ -2,6 +2,20 @@
 .main-info{
     text-align: center;
 }
+.add-picture{
+    display: none;
+    text-align: center;
+    transform: translateY(-137px);
+}
+.profile:hover{
+    .profile-pic{
+        opacity: 0.5;
+    }
+}
+.profile:hover ~ .add-picture{
+    display: block;
+    margin-bottom: -37px;
+}
 .item{
     display: flex;
     height: 50px;
@@ -20,8 +34,6 @@ p{
     width: 20px;
 }
 .profile-pic{
-    margin-right: auto;
-    margin-left: auto;
     max-width: 200px;
     max-height: 200px;
     margin-bottom: 10px;

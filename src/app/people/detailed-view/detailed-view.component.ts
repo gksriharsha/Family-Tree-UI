@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild,ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Person } from 'src/app/model/Person.model';
 import {Location} from 'src/app/model/Location.model'
@@ -18,6 +18,7 @@ export class DetailedViewComponent implements OnInit {
 
   id:number;
   person = new Person();
+  profile_picture:string;
   timeElapsed:number;
   property:string;
   locations:Location[] = null;
@@ -36,6 +37,12 @@ export class DetailedViewComponent implements OnInit {
 
   results:Person[];
 
+  detection_Image:any;
+  task_id:string;
+  face_locations:any;
+  selected_facelist:any;
+  selected_id_list:any;
+  @ViewChild('dataContainer') inp: HTMLInputElement;
   constructor(private CommService:CommunicationService,private router:Router,private route:ActivatedRoute,private alert: AlertService) { }
 
   ngOnInit(): void {
@@ -43,22 +50,44 @@ export class DetailedViewComponent implements OnInit {
     this.today = new Date();
     this.yearController = new FormControl('', [Validators.max(this.today.getFullYear()), Validators.min(1900)]);
     this.relations = {};
-
-    this.route.params.subscribe(params => {
-      let p = new Person();
-      let dateOfBirth;
-      this.id = params['id'];
-      p.ID = this.id;
-      console.log(params)
-      this.CommService.fetchPerson(p).subscribe(data => {
-        console.log(data);
-        this.person = data.Data;
-        this.relations = data.Relations;
-        let currentDate = new Date();
-        dateOfBirth = new Date(this.person.Birth.Date);
-        this.timeElapsed = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateOfBirth.getFullYear(), dateOfBirth.getMonth(), dateOfBirth.getDate()) ) /(1000 * 60 * 60 * 24 * 365));
-      });
-    })
+    this.detection_Image = null;
+    this.task_id = null;
+    this.face_locations = [];
+    this.selected_facelist = [];
+    this.selected_id_list = [];
+    
+    let dateOfBirth;
+    if('person' in history.state){
+      this.person = history.state['person'];
+      this.relations = history.state['relations'];
+      this.id = this.person.ID;
+      console.log(this.person.Birth);
+    }
+    else{
+      this.route.params.subscribe(params => {
+        let p = new Person();
+        this.id = params['id'];
+        p.ID = this.id;
+        
+        this.CommService.fetchPerson(p).subscribe(data => {
+          this.person = data.Data;
+          this.relations = data.Relations;
+          console.log(data.Data.Birth);
+        });
+      })
+    }
+    let currentDate = new Date();
+    dateOfBirth = new Date(this.person.Birth.Date);
+    this.timeElapsed = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateOfBirth.getFullYear(), dateOfBirth.getMonth(), dateOfBirth.getDate()) ) /(1000 * 60 * 60 * 24 * 365));
+    console.log(this.timeElapsed);
+    console.log(this.person.Birth);
+    console.log(currentDate);
+    if(this.person.Death != null){
+      if(this.person.Death.Date !=null){
+        let dateOfDeath = new Date(this.person.Death.Date);
+        this.timeElapsed = Math.floor((Date.UTC(dateOfDeath.getFullYear(), dateOfDeath.getMonth(), dateOfDeath.getDate()) - Date.UTC(dateOfBirth.getFullYear(), dateOfBirth.getMonth(), dateOfBirth.getDate()) ) /(1000 * 60 * 60 * 24 * 365));
+      }
+    }
   }
 
   clickOnAddData(value)
@@ -240,7 +269,7 @@ export class DetailedViewComponent implements OnInit {
         this.lastNameSearch = 'Not Found';
       }
     });
-}
+  }
   search(event)
   {
     let p = new Person;
@@ -263,10 +292,58 @@ export class DetailedViewComponent implements OnInit {
       console.log(data);
     })
   }
-  clearData()
-  {
-    this.selectedPerson = '';
-    this.path = '';
+  buttonPress(){
+    document.getElementById("uploadImage").click();
+  }
+  
+  uploadImage(files:FileList){
+    console.log(files.item(0).size);
+    this.CommService.pictureRelate(files.item(0),null,null,null).subscribe(data =>{
+      console.log(data);
+      this.detection_Image = data['Image'];
+      this.detection_Image = this.detection_Image.split('\'')[1];
+      this.face_locations = data['Face-locations'];
+      this.task_id = data['Task-id'];
+      console.log(this.detection_Image);
+      let img_tag = document.getElementById('recognition2');
+      img_tag.setAttribute('src','data:image/jpg;base64,'+this.detection_Image);
+    });
   }
 
+  selectFace(name,id){
+    if(this.selected_facelist.indexOf(name) == -1){
+      this.selected_facelist.push(name);
+      this.selected_id_list.push(id);
+    }
+    else{
+      this.selected_facelist.splice(this.selected_facelist.indexOf(name),1);
+      this.selected_id_list.splice(this.selected_id_list.indexOf(id),1);
+    }
+    console.log(this.selected_facelist);
+  }
+
+  uploadSelection(){
+    this.face_locations = [];
+    if(this.selected_id_list.indexOf(this.id) != -1){
+      this.selected_id_list.splice(this.selected_id_list.indexOf(this.id),1);
+    }
+    this.CommService.pictureRelate(null,this.id,this.selected_id_list,this.task_id).subscribe(data=>{
+      this.task_id = '';
+      this.face_locations = null;
+      this.detection_Image = data['Image'];
+      this.detection_Image = this.detection_Image.split('\'')[1];
+      let img_tag = document.getElementById('recognition2');
+      img_tag.setAttribute('src','data:image/jpg;base64,'+this.detection_Image);
+    });
+  }
+  clearData()
+  {
+    this.selectedPerson = null;
+    this.path = null;
+    this.inp.value = '';
+    this.results = null;
+    this.selected_facelist = [];
+    this.selected_id_list = [];
+    this.detection_Image = null;
+  }
 }

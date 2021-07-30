@@ -4,18 +4,30 @@
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 25%;
+  margin-top: 5%;
+}
+
+.search {
+  max-width: 30%;
+  margin-right: 15px;
+}
+
+a {
+  width: 100%;
 }
 
 .peopleList {
-  overflow-y: auto;
-  max-height: 100%;
-  left: 0;
+  max-height: 200px;
+  overflow: auto;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .peopleList li {
   list-style: none;
   margin: 10px 0;
+  width: 100%;
 }
 
 .peopleList .person {
@@ -26,14 +38,30 @@
 }
 
 .peopleList .person :hover:not(img) {
-  border: #928f8f 2px solid;
-  width: 250px;
+  border-left: #1261bb 3px solid;
   max-height: 40px;
-  padding: 5px 10px;
-  border-radius: 10px;
+  padding: 0px 10px;
 }
 
-img {
+.icon {
   height: 20px;
   width: 20px;
 }
+
+.svg-icon {
+  cursor: pointer;
+  width: 2em;
+  height: 2em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #212529;
+}
+
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
+}
+/*# sourceMappingURL=view.component.css.map */

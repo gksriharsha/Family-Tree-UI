@@ -1,7 +1,50 @@
 <div>
-  <div style="display: flex;">
+ <div *ngIf="profile_picture != null">
+
+ </div>
+  <div *ngIf="profile_picture == null" style="display: flex;justify-content: center;margin-left: 100px;margin-right: 100px;" class="profile">
     <img src="../../../assets/person.png" class="profile-pic">
   </div>
+  <div class="add-picture">
+    <button class="btn btn-success dp" data-toggle="modal" data-target="#Picture">Add picture</button>
+  </div>
+
+  <div class="modal fade" id="Picture" tabindex="-1" role="dialog" aria-labelledby="PictureTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Picture of {{person.Firstname}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clickOnAddData('')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="profile_picture == null">
+          <input type="file" accept="image/*" id="profile-picture">
+        </div>
+        <div *ngIf="profile_picture !=null">
+          <img id="confirmation-picture" usemap="#facemap">
+          <map name="facemap" id="facemap">
+            <area *ngFor="let c of coordinates" shape="rect" style="cursor: pointer;" coords="{{c[3]+','+c[0]+','+c[1]+','+c[2]}}" (click)="navigateFace(areaItem)" #areaItem>
+          </map>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
   <div class="main-info">
     <!-- <h4 *ngIf="person.Firstname != null else del">{{person.Firstname}} . <a>{{person.Lastname}}</a></h4> -->
     <h4 style="display: inline-flex;">{{person.Firstname}} . <a>{{person.Lastname}}</a>
@@ -16,28 +59,28 @@
       <p>{{person.Gender}}</p><img class="ico" *ngIf="person.Gender == 'Male'" src="../../../assets/Male.png"><img
         class="ico" *ngIf="person.Gender == 'Female'" src="../../../assets/Female.png">
     </div><br>
-    <div style="display: inline-flex;" *ngIf="person.Birth.Date != null">
-      <p>{{person.Birth.Date|date}}</p>
-      <div class="alive-dot" style=" pointer-events: none;font-size: 67px;margin-top: -43px;margin-bottom: -45px;">
+    <div style="display: inline-flex;align-items: center;" *ngIf="person.Birth != null">
+      <p>{{person.Birth.Date|date}}<span *ngIf="person.Death !=null">{{person.Death.Date|date}}</span></p>
+      <div class="alive-dot" style=" pointer-events: none;font-size: 50px;margin-top: -48px;margin-bottom: -45px;">
         &bull;</div>
-      <p>{{timeElapsed}} years old</p>
+      <!-- <p>{{timeElapsed}} years old</p> -->
     </div>
   </div>
   <hr>
   <div style="display: flex;justify-content: space-evenly;">
-    <div style="margin: auto 0;">
-      <div style="display: inline-flex;"><a href="/" data-toggle="modal" data-target="#addRelation"
+    <!-- <div style="margin: auto 0;">
+      <div style="display: inline-flex;align-items: center;"><a href="/" data-toggle="modal" data-target="#addRelation"
           data-keyboard="false" data-backdrop="static">Add Relation</a></div>
-    </div>
+    </div> -->
     <div style="margin: auto 0;" *ngIf="relations.Father == null and relations.Mother == null else Parents">
-      <div style="display: inline-flex;"><strong style="margin-right: 10px;padding: 5px 0;">Parents:</strong>
+      <div style="display: inline-flex;align-items: center;"><strong style="margin-right: 10px;padding: 5px 0;">Parents:</strong>
         <div><button class="btn btn-success" data-toggle="modal" data-target="#addPerson" data-keyboard="false"
             data-backdrop="static" (click)="clickOnAddPerson('Parents')">+</button></div>
       </div>
     </div>
     <ng-template #Parents>
       <div style="margin: auto 0;">
-        <div style="display: inline-flex;"><strong style="margin-right: 10px;">Father:</strong>
+        <div style="display: inline-flex;align-items: center;"><strong style="margin-right: 10px;">Father:</strong>
           <div *ngIf="relations.Father != null else addF"><a
               [routerLink]="['/people/view/'+relations.Father.ID]">{{relations.Father.Firstname}}</a></div>
         </div>
@@ -53,17 +96,17 @@
 
 
     <div style="margin: auto 0;">
-      <div style="display: inline-flex;"><strong style="margin-right: 10px;">Spouse:</strong>
+      <div style="display: inline-flex;align-items: center;"><strong style="margin-right: 10px;">Spouse:</strong>
         <div *ngIf="relations.Spouse != null else addSp"><a
-            [routerLink]="['/people/view/'+relations.Spouse[0].ID]">{{relations.Spouse[0].Firstname}}</a><a
-            style="margin-left: 10px;background-color: greenyellow;cursor: pointer;border: 1px solid black;border-radius: 50%;width: 10px;"
-            data-toggle="modal" data-target="#addPerson" data-keyboard="false" data-backdrop="static"
-            (click)="clickOnAddPerson('Spouse')">+</a></div>
+            [routerLink]="['/people/view/'+relations.Spouse[0].ID]">{{relations.Spouse[0].Firstname}}</a>
+            <button class="btn btn-success"
+            style="margin-left: 10px;cursor: pointer;"data-toggle="modal" data-target="#addPerson" data-keyboard="false" data-backdrop="static"
+            (click)="clickOnAddPerson('Spouse')">+</button></div>
       </div>
     </div>
 
     <div style="margin: auto 0;" *ngIf="relations.Father != null && relations.Mother != null">
-      <div style="display: inline-flex;"><strong style="margin-right: 10px;">Sibling:</strong>
+      <div style="display: inline-flex;align-items: center;"><strong style="margin-right: 10px;">Sibling:</strong>
         <div *ngIf="relations.Brother != null and relations.Sister !=null else addS"><a
             *ngFor="let Brother of relations.Brother;let i=index"
             [routerLink]="['/people/view/'+relations.Brother[i].ID]">{{relations.Brother[i].Firstname}}</a><a
@@ -73,13 +116,13 @@
     </div>
 
     <div style="margin: auto 0;">
-      <div style="display: inline-flex;"><strong style="margin-right: 10px;">Child:</strong>
+      <div style="display: inline-flex; align-items: center;"><strong style="margin-right: 10px;">Child:</strong>
         <div *ngIf="relations.Children != null else addC"><a *ngFor="let Child of relations.Children;let i=index"
             [routerLink]="['/people/view/'+relations.Children[i].ID]"
-            style="margin-right: 10px;">{{relations.Children[i].Firstname}}</a><a
-            style="margin-left: 10px;background-color: greenyellow;cursor: pointer;border: 1px solid black;border-radius: 50%;width: 10px;"
+            style="margin-right: 10px;">{{relations.Children[i].Firstname}}</a>
+            <button style="margin-left: 10px;cursor: pointer;" class="btn btn-success"
             data-toggle="modal" data-target="#addPerson" data-keyboard="false" data-backdrop="static"
-            (click)="clickOnAddPerson('Child')">+</a></div>
+            (click)="clickOnAddPerson('Child')">+</button></div>
       </div>
     </div>
 
@@ -158,13 +201,13 @@
 </div>
 
 <!-- Search Modal-->
-<div class="modal fade" id="addRelation" tabindex="-1" role="dialog" aria-labelledby="addRelationTitle"
+<!-- <div class="modal fade" id="addRelation" tabindex="-1" role="dialog" aria-labelledby="addRelationTitle"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Search Person</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearData()">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearData(inp)">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -198,11 +241,11 @@
     </div>
   </div>
 </div>
-
+-->
 <!-- AddPerson Modal-->
 <div class="modal fade" id="addPerson" tabindex="-1" role="dialog" aria-labelledby="addPersonTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
+    <div class="modal-content"> 
       <div class="modal-header">
         <h5 class="modal-title" id="addPersonLongTitle">Add {{relationToBeAdded}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clickOnAddData('')">
@@ -349,32 +392,56 @@
 <!-- Relation Search-->
 <div class="modal fade" id="RelationSearch" tabindex="-1" role="dialog" aria-labelledby="RelationSearchTitle"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="min-width:500px;max-width: max-content;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="RelationSearchTitleLong">Relation to this person</h5>
+        <h5 class="modal-title" id="RelationSearchTitleLong">Relation to {{person.Firstname+' '+person.Lastname}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearData()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <label style="display: inline-flex;"> Search for a person <div
-            style="width: 20px;height: 20px;margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg></div></label><br>
-        <input type="text" class="form-control" (keyup.enter)="search($event)" #inp>
-      </div>
-      <hr>
-      <div style="height: 100px;overflow-y: auto;">
-        <div *ngIf="path != null" style="text-align: center;">
-          {{selectedPerson}} - {{path.split("_")[0]}}
+      <div [hidden]="detection_Image != null">
+        <div class="modal-body">
+          <label style="display: inline-flex;"> Search for person's name <div
+              style="width: 20px;height: 20px;margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg></div></label><br>
+          <input type="text" class="form-control" (keyup.enter)="search($event)" #inp>
+          <div style="height: 100px;overflow-y: auto;">
+            <div *ngIf="path != null" style="text-align: center;margin-top:20px">
+              {{person.Firstname}} is {{selectedPerson}}'s {{path.split("_")[0]}}
+            </div>
+            <ul style="list-style: none;margin-top:20px" *ngIf="path == null or path == ''">
+              <li style="margin-bottom: 10px;text-align: center;" *ngFor="let person of results"><a style="cursor: pointer;"
+                  (click)="searchResult(person.Firstname,person.ID)" *ngIf="id != person.ID">{{person.Firstname}}</a></li>
+            </ul>
+          </div>
+          <hr>
+          <div style="margin-top: 15px;">
+            <label>Search by uploading a picture</label> 
+            <br>
+            <Button class="btn btn-success" (click)="buttonPress()">Upload photo</Button>
+            <input type="file" style="display: none;" id="uploadImage" (change)="uploadImage($event.target.files)">
+          </div>
         </div>
-        <ul style="list-style: none;" *ngIf="path == null or path == ''">
-          <li style="margin-bottom: 10px;text-align: center;" *ngFor="let person of results"><a style="cursor: pointer;"
-              (click)="searchResult(person.Firstname,person.ID)" *ngIf="id != person.ID">{{person.Firstname}}</a></li>
+        <hr>
+      </div>
+      <div [hidden]="detection_Image == null">
+        <p *ngIf="face_locations !=null">Click on faces with names to get how they are related</p>
+        <ul *ngIf="face_locations !=null" style="list-style-type: none;max-width: 500px;max-height: fit-content;min-height: 100px;">
+          <li *ngFor="let name of selected_facelist" style="float: left;margin-right: 10px;">{{name}}</li>
         </ul>
+        <div style="margin-left: auto;margin-right: auto;text-align: center;">
+          <img id="recognition2" usemap="#facemap" style="margin-right: 5px;margin-left: 5px;margin-top: 10px;">
+          <map name="facemap" id="facemap">
+            <area *ngFor="let c of face_locations" shape="rect" style="cursor: pointer;" coords="{{c[0][3]+','+c[0][0]+','+c[0][1]+','+c[0][2]}}" (click)="selectFace(c[2],c[1])" #areaItem>
+          </map>
+        </div>
+        <div class="modal-footer" *ngIf="face_locations!=null">
+          <button class="btn btn-success" (click)="uploadSelection()">Get relations</button>
+        </div>
       </div>
     </div>
   </div>

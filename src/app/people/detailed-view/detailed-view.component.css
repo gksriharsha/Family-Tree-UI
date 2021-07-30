@@ -2,6 +2,22 @@
   text-align: center;
 }
 
+.add-picture {
+  display: none;
+  text-align: center;
+  -webkit-transform: translateY(-137px);
+          transform: translateY(-137px);
+}
+
+.profile:hover .profile-pic {
+  opacity: 0.5;
+}
+
+.profile:hover ~ .add-picture {
+  display: block;
+  margin-bottom: -37px;
+}
+
 .item {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -28,8 +44,6 @@ p {
 }
 
 .profile-pic {
-  margin-right: auto;
-  margin-left: auto;
   max-width: 200px;
   max-height: 200px;
   margin-bottom: 10px;
@@ -65,3 +79,4 @@ p {
 .alive-dot:hover {
   color: aqua  !important;
 }
+/*# sourceMappingURL=detailed-view.component.css.map */

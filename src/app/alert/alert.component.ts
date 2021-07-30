@@ -12,7 +12,6 @@ export class AlertComponent implements OnInit {
 
   constructor(private alert: AlertService) {
     alert.notifier.subscribe(str => {
-        console.log('Component ', str);
         this.alertText = str;
       }
     );

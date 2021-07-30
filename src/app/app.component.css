@@ -37,3 +37,9 @@ input:focus {
 input.error {
   border-bottom: #f88e37 solid 2px;
 }
+
+.btn-success {
+  background-color: #1261bb !important;
+  border-color: #1261bb;
+}
+/*# sourceMappingURL=app.component.css.map */

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Person} from '../model/Person.model';
 import {Observable} from 'rxjs';
 import {Location} from '../model/Location.model';
@@ -105,5 +105,60 @@ export class CommunicationService {
   modifyPartial(person:Person){
     return this.http
       .post<DataSubmission>(this.baseUrl+'/modify/person',person)
+  }
+
+  pictureSearch(file?:File, face_location?:any, task_id?:string){
+    const formData:FormData = new FormData();
+    let headers = new HttpHeaders({ 'Accept':'*/*'
+                                      })
+    if(file != null){
+      formData.set('image',file,file.name);
+      return this.http
+        .post<any>(this.baseUrl+'/picture/search',formData,{headers:headers});
+    }
+    if(face_location != null){
+      headers = headers.append('Task-id',task_id);
+      headers = headers.append('face-location',face_location);
+      headers = headers.append('Content-Type','application/json');
+      return this.http
+        .post<any>(this.baseUrl+'/picture/search',formData,{headers:headers});
+    }
+  }
+
+  pictureRelate(file?:File,start_id?,end_ids?,task_id?:string){
+    const formData:FormData = new FormData();
+    let headers = new HttpHeaders({ 'Accept':'*/*'
+                                      })
+    if(file != null){
+      formData.set('image',file,file.name);
+      return this.http
+        .post<any>(this.baseUrl+'/picture/relate',formData,{headers:headers});
+    }
+    if(end_ids != null){
+      headers = headers.append('Task-id',task_id);
+      headers = headers.append('start_id',start_id);
+      headers = headers.append('end_ids',end_ids);
+      headers = headers.append('Content-Type','application/json');
+      return this.http
+        .post<any>(this.baseUrl+'/picture/relate',formData,{headers:headers});
+    }
+  }
+
+  pictureRecognize(file?:File,location_vertex_map?,task_id?:string){
+    const formData:FormData = new FormData();
+    let headers = new HttpHeaders({ 'Accept':'*/*'
+                                      })
+    if(file != null){
+      formData.set('image',file,file.name);
+      return this.http
+        .post<any>(this.baseUrl+'/picture/recognize',formData,{headers:headers});
+    }
+    if(location_vertex_map != null){
+      headers = headers.append('Task-id',task_id);
+      headers = headers.append('Vertex-id-map',location_vertex_map);
+      headers = headers.append('Content-Type','application/json');
+      return this.http
+        .post<any>(this.baseUrl+'/picture/recognize',formData,{headers:headers});
+    }
   }
 }

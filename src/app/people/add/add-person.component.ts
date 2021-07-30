@@ -36,8 +36,6 @@ export class AddPersonComponent implements OnInit {
       console.log(this.lastName);
       this.CommService.fetchAllLastNames().subscribe(data => {
         this.lastNames = data.Result;
-        console.log(this.lastNames);
-        console.log(this.lastNames.indexOf(this.lastName));
         if(this.lastNames.indexOf(this.lastName) == 0)
         {
           this.lastNameSearch = 'Found';
@@ -59,7 +57,6 @@ export class AddPersonComponent implements OnInit {
     this.CommService.addPerson(p).subscribe(data => {
       let a;
       if (data.Message.indexOf('added') !== -1) {
-        console.log('Added');
         a = new AlertModel('Person Successfully added', 'success', 3);
         this.alert.setAlertText(a);
       }
